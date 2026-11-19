@@ -68,7 +68,8 @@
                   "amountCents": 5000,
                   "feeCents": 150,
                   "netCents": 4850,
-                  "copyPaste": "000201010212...CODIGO-ILUSTRATIVO"
+                  "copyPaste": "000201010212...CODIGO-ILUSTRATIVO",
+                  "qrCodeImage": null
                 }
               }
             }
@@ -122,7 +123,8 @@
                   "amountCents": 5000,
                   "feeCents": 150,
                   "netCents": 4850,
-                  "copyPaste": "000201010212...CODIGO-ILUSTRATIVO"
+                  "copyPaste": "000201010212...CODIGO-ILUSTRATIVO",
+                  "qrCodeImage": null
                 }
               }
             }
@@ -380,7 +382,8 @@
           "amountCents",
           "feeCents",
           "netCents",
-          "copyPaste"
+          "copyPaste",
+          "qrCodeImage"
         ],
         "properties": {
           "id": {
@@ -424,6 +427,11 @@
             "type": "string",
             "nullable": true,
             "description": "Código Pix Copia e Cola. Pode vir nulo enquanto a geração está pendente."
+          },
+          "qrCodeImage": {
+            "type": "string",
+            "nullable": true,
+            "description": "Imagem PNG do QR Code em data URI (data:image/png;base64,...). Se vier nula e houver copyPaste, gere o QR Code a partir desse código."
           }
         }
       },
@@ -699,8 +707,8 @@
               "$ref": "#/components/schemas/Error"
             },
             "example": {
-              "code": "ALLO_UNAVAILABLE",
-              "message": "Não foi possível confirmar a operação com a Allo no momento."
+              "code": "PIX_PROVIDER_UNAVAILABLE",
+              "message": "O processamento Pix está indisponível no momento."
             }
           }
         }

@@ -40,6 +40,6 @@ Outros erros podem vir com `statusCode`, `message` e `error`.
 | `INSUFFICIENT_BALANCE` | Saldo insuficiente para o valor e a tarifa |
 | `DAILY_WITHDRAWAL_LIMIT` | Limite diário de saques atingido |
 | `TOO_MANY_ATTEMPTS` | Limite de acesso por IP atingido |
-| `PIX_PROVIDER_UNAVAILABLE` ou `ALLO_UNAVAILABLE` | Processamento Pix indisponível ou confirmação pendente |
+| `PIX_PROVIDER_UNAVAILABLE` | Processamento Pix indisponível ou confirmação pendente |
 
 O limite de acesso às rotas Pix é de 120 requisições por IP em uma janela de 60 segundos. Prefira [webhooks](/webhooks/configuracao) para receber atualizações assíncronas.

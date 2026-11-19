@@ -6,7 +6,7 @@ description: "Crie um Pix Copia e Cola e concilie o valor líquido após o pagam
 ## Da criação à confirmação
 
 1. [Crie a cobrança](/referencia/criar-cobranca) com o valor em centavos e o nome do pagador. A Zanpay guarda a tarifa da conta naquele momento.
-2. Apresente o `copyPaste` retornado. Guarde o `id` para conciliar a cobrança com o seu pedido.
+2. Apresente o `copyPaste` e, quando disponível, exiba `qrCodeImage` como uma imagem PNG. Se a imagem vier nula, você pode gerar o QR Code a partir de `copyPaste`. Guarde o `id` para conciliar a cobrança com o seu pedido.
 3. Receba o evento `charge.paid` ou [consulte a cobrança](/referencia/consultar-cobranca). O valor líquido é creditado quando o pagamento é confirmado.
 4. Se um pagamento confirmado for estornado, a Zanpay reverte o crédito líquido e envia `refund.completed`.
 
