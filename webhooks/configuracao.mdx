@@ -9,6 +9,8 @@ description: "Cadastre um endpoint HTTPS e acompanhe o histórico de entregas."
 2. Clique em **Novo endpoint**, informe uma URL HTTPS pública e selecione os [eventos](/webhooks/eventos) que deseja receber.
 3. Envie um evento de teste pelo painel e confira a entrega em **Histórico de entregas**.
 
+Use **Editar eventos** para alterar as notificações de um endpoint cadastrado. As alterações valem para os próximos eventos da conta.
+
 Use um domínio público com HTTPS na porta padrão. A URL aceita caminho e parâmetros. Use URLs sem fragmento ou credenciais embutidas.
 
 ## Receba as notificações
@@ -19,4 +21,4 @@ Trate o `id` do evento como identificador da entrega. Um reenvio mantém o mesmo
 
 ## Confirme antes de executar uma ação
 
-Use o webhook como sinal de atualização. Antes de liberar um pedido ou alterar o seu saldo interno, [consulte a cobrança](/referencia/consultar-cobranca) ou [consulte o saque](/referencia/consultar-saque) pelo `data.id`, usando sua chave de API no servidor. Use o status da consulta para tomar a decisão e registre o `id` do envelope para reconhecer reenvios da entrega.
+Use o webhook como sinal de atualização. Antes de liberar um pedido ou alterar o seu saldo interno, [consulte a cobrança](/referencia/consultar-cobranca) criada via API ou [consulte o saque](/referencia/consultar-saque) pelo `data.id`. Para depósitos gerados na Home, consulte o ID em **Cobranças** no painel. Registre o `id` do envelope para reconhecer reenvios da entrega.

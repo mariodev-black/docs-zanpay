@@ -19,12 +19,15 @@ Nos eventos de cobrança, `data.id` é o inteiro de seis dígitos retornado na c
 
 | Evento | Quando é enviado |
 | --- | --- |
+| `charge.created` | Pix gerado pela Home ou pela API, com status `pending` |
 | `charge.paid` | Pagamento confirmado e valor líquido creditado |
 | `charge.failed` | Cobrança recusada ou encerrada antes do crédito |
 | `refund.completed` | Estorno confirmado de uma cobrança previamente paga |
 | `payout.completed` | Saque confirmado pela adquirente |
 | `payout.failed` | Saque recusado ou devolvido |
 | `webhook.test` | Teste solicitado no painel |
+
+Uma cobrança pode gerar `charge.created` e depois `charge.paid`. Confira o status da operação antes de liberar um pedido.
 
 ## Exemplos
 
