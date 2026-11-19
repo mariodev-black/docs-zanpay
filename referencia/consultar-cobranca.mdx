@@ -4,4 +4,4 @@ description: "Consulte valores e o status de pagamento de uma cobrança."
 openapi: "openapi.json GET /api/v1/transactions/{id}"
 ---
 
-Use o ID retornado na criação. O status `paid` indica que o pagamento foi confirmado. Veja os [status de cobrança](/guias/cobrancas#status-da-cobranca).
+Use os seis dígitos do `id` retornado na criação. Para o ID `381246`, chame `GET /api/v1/transactions/381246`. O status `paid` indica que o pagamento foi confirmado. Veja os [status de cobrança](/guias/cobrancas#status-da-cobrança).

@@ -21,7 +21,21 @@ Você precisa de uma conta Zanpay aprovada e de uma chave com permissão para co
       --data '{"amountCents":5000,"payerName":"Cliente Exemplo","description":"Pedido 123"}'
     ```
 
-    A resposta HTTP `201` inclui o `id` da cobrança, o `copyPaste` e os valores de tarifa e líquido. Exiba o `copyPaste` ao pagador e guarde o `id` junto ao pedido.
+    A resposta HTTP `201` inclui o `id` numérico da cobrança.
+
+    ```json
+    {
+      "id": 381246,
+      "status": "pending",
+      "amountCents": 5000,
+      "feeCents": 150,
+      "netCents": 4850,
+      "copyPaste": "000201010212...CODIGO-ILUSTRATIVO",
+      "qrCodeImage": null
+    }
+    ```
+
+    Exiba o `copyPaste` ao pagador e guarde o `id` junto ao pedido. Use o mesmo `Idempotency-Key` ao reenviar a criação com os mesmos dados.
   </Step>
   <Step title="Confirme o pagamento">
     Consulte o ID retornado pela API. No comando abaixo, troque `381246` pelo seu ID.

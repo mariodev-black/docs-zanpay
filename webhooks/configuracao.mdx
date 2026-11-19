@@ -19,4 +19,4 @@ Trate o `id` do evento como identificador da entrega. Um reenvio mantém o mesmo
 
 ## Confirme antes de executar uma ação
 
-Use o webhook como sinal de atualização. Antes de liberar um pedido ou alterar o seu saldo interno, [consulte a cobrança](/referencia/consultar-cobranca) ou [consulte o saque](/referencia/consultar-saque) pelo `data.id`, usando sua chave de API no servidor. Use o status da consulta para tomar a decisão e registre os IDs processados para tratar reenvios.
+Use o webhook como sinal de atualização. Antes de liberar um pedido ou alterar o seu saldo interno, [consulte a cobrança](/referencia/consultar-cobranca) ou [consulte o saque](/referencia/consultar-saque) pelo `data.id`, usando sua chave de API no servidor. Use o status da consulta para tomar a decisão e registre o `id` do envelope para reconhecer reenvios da entrega.

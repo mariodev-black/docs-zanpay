@@ -4,4 +4,4 @@ description: "Gere um Pix Copia e Cola para receber um pagamento."
 openapi: "openapi.json POST /api/v1/transactions"
 ---
 
-Envie o valor em centavos e o nome do pagador. Para acompanhar o pagamento, guarde o `id` retornado e configure o evento [`charge.paid`](/webhooks/eventos).
+Envie o valor em centavos inteiros e o nome do pagador. A resposta inclui um `id` numérico de seis dígitos. Guarde-o para [consultar a cobrança](/referencia/consultar-cobranca) e localizar o pedido quando receber o evento [`charge.paid`](/webhooks/eventos).

@@ -10,8 +10,10 @@ description: "Confira o formato das notificações e os eventos emitidos pela Za
 | `id` | inteiro | ID da entrega usado para identificar reenvios |
 | `event` | string | Nome do evento |
 | `createdAt` | string | Data e hora ISO 8601 do registro da entrega |
-| `data` | objeto | Dados da cobrança ou do saque em eventos financeiros |
+| `data` | objeto | Dados da operação financeira, incluindo o identificador em `data.id` |
 | `test` | booleano | `true` nas entregas de teste |
+
+Nos eventos de cobrança, `data.id` é o inteiro de seis dígitos retornado na criação. Nos eventos de saque, `data.id` é a string de seis dígitos retornada na solicitação do saque. Use esse campo para buscar a operação e o `id` do envelope para reconhecer o reenvio de uma entrega.
 
 ## Eventos emitidos
 
@@ -34,8 +36,7 @@ description: "Confira o formato das notificações e os eventos emitidos pela Za
   "event": "charge.paid",
   "createdAt": "2026-11-19T12:00:00.000Z",
   "data": {
-    "id": "381246",
-    "reference": "ZP-referencia-ilustrativa",
+    "id": 381246,
     "status": "paid",
     "amountCents": 5000,
     "feeCents": 150,

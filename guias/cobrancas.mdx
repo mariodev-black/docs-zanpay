@@ -10,6 +10,12 @@ description: "Crie um Pix Copia e Cola e concilie o valor líquido após o pagam
 3. Receba o evento `charge.paid` ou [consulte a cobrança](/referencia/consultar-cobranca). O valor líquido é creditado quando o pagamento é confirmado.
 4. Se um pagamento confirmado for estornado, a Zanpay reverte o crédito líquido e envia `refund.completed`.
 
+## ID da cobrança
+
+A Zanpay gera um `id` inteiro de seis dígitos, entre `100000` e `999999`, ao criar a cobrança. Guarde esse valor junto ao pedido em sua aplicação. Por exemplo, com `id` igual a `381246`, consulte `GET /api/v1/transactions/381246`.
+
+O mesmo número aparece em `data.id` nos [eventos da cobrança](/webhooks/eventos) e pode ser usado na busca de **Cobranças** no painel. Se uma integração antiga usa `reference` para conciliação, passe a gravar e consultar o `id` retornado pela API.
+
 ## Valores retornados
 
 | Campo | Significado |

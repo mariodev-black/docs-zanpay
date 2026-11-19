@@ -4,4 +4,4 @@ description: "Acompanhe a aprovação, a confirmação e os valores de um saque.
 openapi: "openapi.json GET /api/v1/withdrawals/{id}"
 ---
 
-Use o ID retornado na solicitação. O `endToEndId` identifica a transferência Pix após a confirmação.
+Use o `id` retornado na solicitação, uma string de seis dígitos. Para o ID `694217`, chame `GET /api/v1/withdrawals/694217`. O `endToEndId` identifica a transferência Pix após a confirmação.

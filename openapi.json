@@ -62,8 +62,7 @@
                   "$ref": "#/components/schemas/Charge"
                 },
                 "example": {
-                  "id": "381246",
-                  "reference": "ZP-referencia-ilustrativa",
+                  "id": 381246,
                   "status": "pending",
                   "amountCents": 5000,
                   "feeCents": 150,
@@ -105,7 +104,7 @@
         "description": "Exige o escopo `charges` ou `charges_and_withdrawals`. Retorna cobranças da conta vinculada à chave.",
         "parameters": [
           {
-            "$ref": "#/components/parameters/OperationId"
+            "$ref": "#/components/parameters/ChargeId"
           }
         ],
         "responses": {
@@ -117,8 +116,7 @@
                   "$ref": "#/components/schemas/Charge"
                 },
                 "example": {
-                  "id": "381246",
-                  "reference": "ZP-referencia-ilustrativa",
+                  "id": 381246,
                   "status": "paid",
                   "amountCents": 5000,
                   "feeCents": 150,
@@ -257,7 +255,7 @@
         "description": "Exige o escopo `withdrawals` ou `charges_and_withdrawals`, canal habilitado e IP autorizado. Retorna saques da API da conta vinculada à chave.",
         "parameters": [
           {
-            "$ref": "#/components/parameters/OperationId"
+            "$ref": "#/components/parameters/WithdrawalId"
           }
         ],
         "responses": {
@@ -311,7 +309,7 @@
       "IdempotencyKey": {
         "name": "Idempotency-Key",
         "in": "header",
-        "description": "Identificador único por operação. Reutilize o valor em reenvios com os mesmos dados.",
+        "description": "Chave gerada pela integração para identificar uma intenção de pagamento ou saque. Reutilize o valor em reenvios com os mesmos dados.",
         "schema": {
           "type": "string",
           "minLength": 1,
@@ -320,17 +318,29 @@
         },
         "example": "pedido-123"
       },
-      "OperationId": {
+      "ChargeId": {
         "name": "id",
         "in": "path",
         "required": true,
-        "description": "ID de seis dígitos retornado na criação da operação. Use o ID da conta que emitiu a solicitação.",
+        "description": "ID numérico de seis dígitos retornado na criação da cobrança.",
+        "schema": {
+          "type": "integer",
+          "minimum": 100000,
+          "maximum": 999999
+        },
+        "example": 381246
+      },
+      "WithdrawalId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "ID de seis dígitos retornado na solicitação do saque.",
         "schema": {
           "type": "string",
           "pattern": "^[1-9][0-9]{5}$",
           "description": "Identificador Zanpay com seis dígitos."
         },
-        "example": "381246"
+        "example": "694217"
       }
     },
     "schemas": {
@@ -377,7 +387,6 @@
         "type": "object",
         "required": [
           "id",
-          "reference",
           "status",
           "amountCents",
           "feeCents",
@@ -387,13 +396,11 @@
         ],
         "properties": {
           "id": {
-            "type": "string",
-            "pattern": "^[1-9][0-9]{5}$",
-            "description": "Identificador Zanpay com seis dígitos."
-          },
-          "reference": {
-            "type": "string",
-            "description": "Referência da operação gerada pela Zanpay."
+            "type": "integer",
+            "minimum": 100000,
+            "maximum": 999999,
+            "description": "ID público da cobrança. Use este número na consulta e em `data.id` nos webhooks de cobrança.",
+            "example": 381246
           },
           "status": {
             "type": "string",
@@ -448,7 +455,7 @@
             "type": "integer",
             "format": "int64",
             "minimum": 1,
-            "description": "Valor que o destinatário recebe. A Zanpay reserva esse valor mais a tarifa.",
+            "description": "Valor em centavos que o destinatário recebe. A Zanpay reserva esse valor mais a tarifa para saques solicitados via API.",
             "maximum": 999999999999,
             "example": 5000
           },
@@ -502,7 +509,8 @@
           "id": {
             "type": "string",
             "pattern": "^[1-9][0-9]{5}$",
-            "description": "Identificador Zanpay com seis dígitos."
+            "description": "ID do saque retornado como uma string de seis dígitos.",
+            "example": "694217"
           },
           "status": {
             "type": "string",
