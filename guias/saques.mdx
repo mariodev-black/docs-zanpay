@@ -15,7 +15,7 @@ Confira o valor líquido e a modalidade na revisão e confirme com o autenticado
 
 1. Com os saques via API habilitados na conta, [autorize seu IP](/guias/autenticacao#autorize-o-ip-para-saques) e valide o acesso no [endpoint de checagem](/referencia/checar-acesso-saque).
 2. [Solicite o saque](/referencia/solicitar-saque) com valor e chave Pix. A Zanpay verifica os limites da conta e reserva `amountCents + feeCents`.
-3. Aguarde a aprovação administrativa. A Zanpay envia o Pix à adquirente após a aprovação.
+3. Com **Saque automático** ativo, a Zanpay encaminha o Pix quando `amountCents + feeCents` está dentro do limite automático da conta. Acima do limite ou com o modo automático desligado, o pedido aguarda aprovação administrativa.
 4. Guarde o `id` de seis dígitos retornado como string e use-o para [consultar o saque](/referencia/consultar-saque) ou correlacionar os eventos `payout.completed` e `payout.failed`. O status `completed` confirma a conclusão e inclui o `endToEndId`.
 
 ### Tipos de chave
@@ -32,7 +32,7 @@ Confira o valor líquido e a modalidade na revisão e confirme com o autenticado
 
 | Status | Significado |
 | --- | --- |
-| `pending` | Solicitação recebida com saldo reservado |
+| `pending` | Solicitação com saldo reservado, aguardando aprovação |
 | `reviewing` | Saque em análise ou aguardando confirmação da adquirente |
 | `completed` | Pix confirmado pela adquirente |
 | `failed` | Saque recusado ou devolvido |

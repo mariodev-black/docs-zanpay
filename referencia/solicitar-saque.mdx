@@ -1,7 +1,7 @@
 ---
 title: "Solicitar saque"
-description: "Reserve o valor e a tarifa para um saque Pix sujeito a aprovação."
+description: "Solicite um saque Pix e acompanhe a confirmação pelo ID."
 openapi: "openapi.json POST /api/v1/withdrawals"
 ---
 
-A solicitação inicial fica `pending`. O valor enviado em `amountCents` é o que o destinatário recebe. Veja [os formatos de chave e o fluxo de aprovação](/guias/saques).
+O valor enviado em `amountCents` é o que o destinatário recebe. A Zanpay reserva `amountCents + feeCents` antes do envio. Com **Saque automático** ativo, o total precisa estar dentro do limite da conta para o Pix seguir automaticamente. O status `reviewing` indica que o envio aguarda confirmação e `pending` indica aprovação manual pendente. Veja [os formatos de chave e o fluxo de saque](/guias/saques).

@@ -183,7 +183,7 @@
         "tags": [
           "Saques"
         ],
-        "description": "Exige o escopo `withdrawals` ou `charges_and_withdrawals`, canal de saque via API habilitado e IP autorizado. A nova solicitação reserva o valor e a tarifa e aguarda aprovação.",
+        "description": "Exige o escopo `withdrawals` ou `charges_and_withdrawals`, canal de saque via API habilitado e IP autorizado. A solicitação reserva o valor com a tarifa. Com saque automático ativo, o total precisa estar dentro do limite automático para seguir à adquirente. Os demais pedidos aguardam aprovação administrativa.",
         "parameters": [
           {
             "$ref": "#/components/parameters/IdempotencyKey"
