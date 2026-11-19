@@ -1,0 +1,22 @@
+---
+title: "Configurar webhooks"
+description: "Cadastre um endpoint HTTPS e acompanhe o histórico de entregas."
+---
+
+## Cadastre o endpoint
+
+1. No painel Zanpay, acesse **API e webhooks**.
+2. Clique em **Novo endpoint**, informe uma URL HTTPS pública e selecione os [eventos](/webhooks/eventos) que deseja receber.
+3. Envie um evento de teste pelo painel e confira a entrega em **Histórico de entregas**.
+
+Use um domínio público com HTTPS na porta padrão. A URL aceita caminho e parâmetros. Use URLs sem fragmento ou credenciais embutidas.
+
+## Receba as notificações
+
+A Zanpay envia `POST` em JSON com `User-Agent: Zanpay-Webhooks`. Responda com um código HTTP `2xx` assim que guardar o evento para processamento. A tentativa tem um limite de 6,5 segundos. O histórico mostra o status, o código HTTP quando disponível e a quantidade de tentativas.
+
+Trate o `id` do evento como identificador da entrega. Um reenvio mantém o mesmo ID e corpo. Você pode reenviar pelo histórico até o limite de cinco tentativas por entrega.
+
+## Confirme antes de executar uma ação
+
+Use o webhook como sinal de atualização. Antes de liberar um pedido ou alterar o seu saldo interno, [consulte a cobrança](/referencia/consultar-cobranca) ou [consulte o saque](/referencia/consultar-saque) pelo `data.id`, usando sua chave de API no servidor. Use o status da consulta para tomar a decisão e registre os IDs processados para tratar reenvios.

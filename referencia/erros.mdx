@@ -1,0 +1,45 @@
+---
+title: "Erros e limites"
+description: "Interprete os códigos HTTP e decida quando corrigir ou repetir uma requisição."
+---
+
+## Respostas da API
+
+Erros de validação de campos retornam HTTP `400`, com `code`, `message` e `fields`. Use `code` para tratar a falha na aplicação e `message` para diagnóstico.
+
+```json
+{
+  "code": "INVALID_INPUT",
+  "message": "Informe uma chave Pix válida para o tipo selecionado.",
+  "fields": ["key"]
+}
+```
+
+Outros erros podem vir com `statusCode`, `message` e `error`.
+
+| HTTP | Quando ocorre | Ação |
+| --- | --- | --- |
+| `400` | Campos inválidos, limites da conta, saldo insuficiente ou limite diário de saques | Corrija os dados e confira os limites e a tarifa da conta |
+| `401` | Chave de API ausente, inválida ou revogada | Confira o cabeçalho `X-API-Key` |
+| `403` | Escopo insuficiente, conta indisponível, saque desabilitado ou IP de origem sem autorização | Confira as permissões da chave, a conta e o IP |
+| `404` | ID inválido ou registro indisponível na conta da chave | Use o ID original e a credencial daquela conta |
+| `409` | `Idempotency-Key` já usada com dados diferentes | Confira o pedido original e a chave associada |
+| `429` | Limite de requisições atingido | Aguarde os segundos indicados por `Retry-After` |
+| `503` | O processamento Pix está indisponível ou a confirmação falhou temporariamente | Para criações, repita a chamada com a mesma `Idempotency-Key` |
+
+## Códigos comuns
+
+| `code` | Significado |
+| --- | --- |
+| `INVALID_INPUT` | Campo inválido ou extra |
+| `INVALID_API_KEY` | Chave de API ausente, inválida ou revogada |
+| `INVALID_API_SCOPE` | Chave sem o escopo exigido pela rota |
+| `VERIFICATION_REQUIRED` | Conta indisponível para criar ou consultar cobranças |
+| `WITHDRAWAL_DISABLED` | Saque indisponível para a conta |
+| `IP_NOT_AUTHORIZED` | IP de origem ausente da lista de saques |
+| `INSUFFICIENT_BALANCE` | Saldo insuficiente para o valor e a tarifa |
+| `DAILY_WITHDRAWAL_LIMIT` | Limite diário de saques atingido |
+| `TOO_MANY_ATTEMPTS` | Limite de acesso por IP atingido |
+| `PIX_PROVIDER_UNAVAILABLE` ou `ALLO_UNAVAILABLE` | Processamento Pix indisponível ou confirmação pendente |
+
+O limite de acesso às rotas Pix é de 120 requisições por IP em uma janela de 60 segundos. Prefira [webhooks](/webhooks/configuracao) para receber atualizações assíncronas.

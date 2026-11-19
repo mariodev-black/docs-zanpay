@@ -1,0 +1,33 @@
+---
+title: "Autenticação"
+description: "Crie uma chave no painel e envie o cabeçalho X-API-Key nas requisições."
+---
+
+## Crie a chave
+
+No painel da sua conta, abra **API e webhooks** e clique em **Nova chave**. Dê um nome à integração, selecione o escopo e confirme com um código do autenticador. A chave completa aparece apenas na criação.
+
+| Escopo | Acesso |
+| --- | --- |
+| `charges` | Criar e consultar cobranças |
+| `withdrawals` | Checar acesso, solicitar e consultar saques |
+| `charges_and_withdrawals` | Operações de cobrança e saque |
+
+## Envie o cabeçalho
+
+Use a chave no servidor da sua aplicação. Armazene-a em um gerenciador de segredos ou variável de ambiente e mantenha o acesso às credenciais restrito ao backend.
+
+```http
+X-API-Key: SUA_CHAVE_ZANPAY
+Content-Type: application/json
+```
+
+A conta precisa estar aprovada e ativa. As consultas ficam restritas aos registros da conta vinculada à chave.
+
+## Autorize o IP para saques
+
+Em **API e webhooks → Gerenciar IPs**, confirme com o autenticador e cadastre o IP público de saída do servidor que chama a API. A configuração aceita endereços IPv4 e IPv6. Confira o acesso chamando [Checar acesso a saques](/referencia/checar-acesso-saque) a partir desse mesmo servidor.
+
+## Revogue uma chave
+
+Para trocar uma credencial, crie a substituta, atualize a aplicação e então revogue a antiga em **API e webhooks**. A revogação encerra o acesso dessa credencial às requisições seguintes.

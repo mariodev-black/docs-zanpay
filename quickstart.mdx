@@ -1,47 +1,36 @@
 ---
-title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+title: "Sua primeira cobrança"
+sidebarTitle: "Guia rápido"
+description: "Crie uma cobrança de R$ 50,00 e consulte a confirmação do pagamento."
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
-
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
-
-## Prerequisites
-
-Before you begin, you must have:
-
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
-
-## Get started
+Você precisa de uma conta Zanpay aprovada e de uma chave com permissão para cobranças. O exemplo usa o ambiente de produção.
 
 <Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
-
-    ```bash
-    npm install your-package
-    ```
+  <Step title="Crie a chave de API">
+    Abra **API e webhooks** no painel Zanpay. Em **Nova chave**, selecione o escopo de cobranças e confirme com o autenticador. Guarde a chave em uma variável de ambiente do seu servidor.
   </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
+  <Step title="Crie a cobrança">
+    Substitua `SUA_CHAVE_ZANPAY` pela chave da integração. Gere um valor de `Idempotency-Key` para cada novo pedido.
 
     ```bash
-    your-cli init
+    curl --request POST 'https://api.zanpaybr.com/api/v1/transactions' \
+      --header 'X-API-Key: SUA_CHAVE_ZANPAY' \
+      --header 'Content-Type: application/json' \
+      --header 'Idempotency-Key: pedido-123' \
+      --data '{"amountCents":5000,"payerName":"Cliente Exemplo","description":"Pedido 123"}'
     ```
+
+    A resposta HTTP `201` inclui o `id` da cobrança, o `copyPaste` e os valores de tarifa e líquido. Exiba o `copyPaste` ao pagador e guarde o `id` junto ao pedido.
   </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
+  <Step title="Confirme o pagamento">
+    Consulte o ID retornado pela API. No comando abaixo, troque `381246` pelo seu ID.
 
     ```bash
-    your-cli start
+    curl 'https://api.zanpaybr.com/api/v1/transactions/381246' \
+      --header 'X-API-Key: SUA_CHAVE_ZANPAY'
     ```
+
+    Entregue o produto ou serviço quando o status estiver `paid`. Para automatizar essa etapa, [configure o webhook](/webhooks/configuracao) com o evento `charge.paid`.
   </Step>
 </Steps>
-
-<Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
-
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
-</Tip>

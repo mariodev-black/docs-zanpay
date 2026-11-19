@@ -1,37 +1,8 @@
-> **First-time setup**: Customize this file for your project. Prompt the user to customize this file for their project.
-> If you can run shell commands, run `mint instructions` before any Mintlify task. It prints current guidance for this CLI version. Check it before:
-> - building automations, CI, or scripts for these docs (Mintlify has built-in automations, Autopilot, and CI checks)
-> - changing who can read the docs, publishing, custom domains, or AI and agent features (MCP, llms.txt, skill.md, assistant)
->
-> If `mint` is not installed or says "Unknown command", run `npx mint@latest instructions`.
-> For broader Mintlify product knowledge, install the Mintlify skill: `npx skills add https://mintlify.com/docs`
+# Documentação Zanpay
 
-# Documentation project instructions
-
-## About this project
-
-- This is a documentation site built on [Mintlify](https://mintlify.com)
-- Pages are MDX files with YAML frontmatter
-- Configuration lives in `docs.json`
-- Use the Mintlify MCP server, `https://mcp.mintlify.com`, to edit content and settings via MCP
-- Use the Mintlify docs MCP server, `https://www.mintlify.com/docs/mcp`, to query information about using Mintlify via MCP
-
-## Terminology
-
-{/* Add product-specific terms and preferred usage */}
-{/* Example: Use "workspace" not "project", "member" not "user" */}
-
-## Style preferences
-
-{/* Add any project-specific style rules below */}
-
-- Use active voice and second person ("you")
-- Keep sentences concise — one idea per sentence
-- Use sentence case for headings
-- Bold for UI elements: Click **Settings**
-- Code formatting for file names, commands, paths, and code references
-
-## Content boundaries
-
-{/* Define what should and shouldn't be documented */}
-{/* Example: Don't document internal admin features */}
+- Este repositório é o site público de documentação da Zanpay no Mintlify. Use MDX para o conteúdo e `docs.json` para a navegação e aparência.
+- Escreva em português do Brasil. Use **Zanpay**, **Pix**, **Pix Copia e Cola** e **API e webhooks**.
+- Confira caminhos, cabeçalhos, payloads, status e erros no backend antes de alterar o OpenAPI ou os exemplos. A origem de produção é `https://api.zanpaybr.com` e as rotas para integradores usam `/api/v1`.
+- Documente o painel quando ele fizer parte da configuração da integração. Mantenha rotas administrativas, cookies internos e callbacks de adquirentes fora da referência pública.
+- Use credenciais marcadas como exemplo e dados fictícios. Os exemplos usam centavos inteiros.
+- Consulte `npx mint@latest instructions` para identificar o tópico de ajuda aplicável. Valide alterações com `npx mint@latest validate` e `npx mint@latest broken-links`.

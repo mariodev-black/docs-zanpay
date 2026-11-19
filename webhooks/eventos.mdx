@@ -1,0 +1,74 @@
+---
+title: "Eventos e payloads"
+description: "Confira o formato das notificações e os eventos emitidos pela Zanpay."
+---
+
+## Envelope
+
+| Campo | Tipo | Significado |
+| --- | --- | --- |
+| `id` | inteiro | ID da entrega usado para identificar reenvios |
+| `event` | string | Nome do evento |
+| `createdAt` | string | Data e hora ISO 8601 do registro da entrega |
+| `data` | objeto | Dados da cobrança ou do saque em eventos financeiros |
+| `test` | booleano | `true` nas entregas de teste |
+
+## Eventos emitidos
+
+| Evento | Quando é enviado |
+| --- | --- |
+| `charge.paid` | Pagamento confirmado e valor líquido creditado |
+| `charge.failed` | Cobrança recusada ou encerrada antes do crédito |
+| `refund.completed` | Estorno confirmado de uma cobrança previamente paga |
+| `payout.completed` | Saque confirmado pela adquirente |
+| `payout.failed` | Saque recusado ou devolvido |
+| `webhook.test` | Teste solicitado no painel |
+
+## Exemplos
+
+<CodeGroup>
+
+```json Cobrança paga
+{
+  "id": 461320,
+  "event": "charge.paid",
+  "createdAt": "2026-11-19T12:00:00.000Z",
+  "data": {
+    "id": "381246",
+    "reference": "ZP-referencia-ilustrativa",
+    "status": "paid",
+    "amountCents": 5000,
+    "feeCents": 150,
+    "netCents": 4850
+  }
+}
+```
+
+```json Saque concluído
+{
+  "id": 461321,
+  "event": "payout.completed",
+  "createdAt": "2026-11-19T12:40:00.000Z",
+  "data": {
+    "id": "694217",
+    "status": "completed",
+    "occurredAt": "2026-11-19T12:20:00.000Z",
+    "amountCents": 5000,
+    "feeCents": 250,
+    "totalCents": 5250,
+    "keyType": "email",
+    "endToEndId": "E12345678202611191240ABCDEF123456"
+  }
+}
+```
+
+```json Teste
+{
+  "id": 461322,
+  "event": "webhook.test",
+  "createdAt": "2026-11-19T13:00:00.000Z",
+  "test": true
+}
+```
+
+</CodeGroup>

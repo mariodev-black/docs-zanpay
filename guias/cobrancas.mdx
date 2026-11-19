@@ -1,0 +1,31 @@
+---
+title: "Cobranças Pix"
+description: "Crie um Pix Copia e Cola e concilie o valor líquido após o pagamento."
+---
+
+## Da criação à confirmação
+
+1. [Crie a cobrança](/referencia/criar-cobranca) com o valor em centavos e o nome do pagador. A Zanpay guarda a tarifa da conta naquele momento.
+2. Apresente o `copyPaste` retornado. Guarde o `id` para conciliar a cobrança com o seu pedido.
+3. Receba o evento `charge.paid` ou [consulte a cobrança](/referencia/consultar-cobranca). O valor líquido é creditado quando o pagamento é confirmado.
+4. Se um pagamento confirmado for estornado, a Zanpay reverte o crédito líquido e envia `refund.completed`.
+
+## Valores retornados
+
+| Campo | Significado |
+| --- | --- |
+| `amountCents` | Valor integral cobrado do pagador |
+| `feeCents` | Tarifa fixa mais a parcela percentual da conta, arredondada ao centavo |
+| `netCents` | Valor integral menos a tarifa |
+
+## Status da cobrança
+
+| Status | Significado |
+| --- | --- |
+| `pending` | Cobrança aguardando a confirmação do pagamento |
+| `paid` | Pagamento confirmado |
+| `refunded` | Pagamento confirmado e posteriormente estornado |
+| `failed` | Cobrança recusada ou encerrada antes de receber crédito |
+| `expired` | Registro marcado como expirado |
+
+A API aceita CPF ou CNPJ válido em `payerDocument`. Quando informado, o CPF é encaminhado ao processador. O CNPJ é registrado na Zanpay.

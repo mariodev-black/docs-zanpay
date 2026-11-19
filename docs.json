@@ -1,72 +1,102 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mintlify Starter Kit",
+  "theme": "palm",
+  "name": "Zanpay Docs",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#4c641c",
+    "light": "#d6f88a",
+    "dark": "#4c641c"
   },
-  "favicon": "/favicon.svg",
-  "navigation": {
-    "pages": [
-      {
-        "group": "Getting Started",
-        "pages": [
-          "index",
-          "quickstart"
-        ]
-      }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
+  "appearance": {
+    "default": "dark"
+  },
+  "background": {
+    "color": {
+      "light": "#f8faf4",
+      "dark": "#151516"
     }
   },
+  "fonts": {
+    "heading": {
+      "family": "Manrope",
+      "weight": 800
+    },
+    "body": {
+      "family": "Manrope",
+      "weight": 500
+    }
+  },
+  "favicon": "/favicon.svg",
   "logo": {
     "light": "/logo/light.svg",
     "dark": "/logo/dark.svg"
   },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:support@mintlify.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://app.mintlify.com"
-    }
+  "search": {
+    "prompt": "Buscar na documentação"
   },
-  "contextual": {
-    "options": [
-      "copy",
-      "view",
-      "chatgpt",
-      "claude",
-      "perplexity",
-      "mcp",
-      "cursor",
-      "vscode"
+  "navigation": {
+    "languages": [
+      {
+        "language": "pt-BR",
+        "default": true,
+        "groups": [
+          {
+            "group": "Primeiros passos",
+            "pages": [
+              "index",
+              "quickstart",
+              "guias/autenticacao",
+              "guias/idempotencia"
+            ]
+          },
+          {
+            "group": "Pagamentos Pix",
+            "pages": [
+              "guias/cobrancas",
+              "guias/saques"
+            ]
+          },
+          {
+            "group": "Referência",
+            "pages": [
+              "referencia/criar-cobranca",
+              "referencia/consultar-cobranca",
+              "referencia/checar-acesso-saque",
+              "referencia/solicitar-saque",
+              "referencia/consultar-saque",
+              "referencia/erros"
+            ]
+          },
+          {
+            "group": "Webhooks",
+            "pages": [
+              "webhooks/configuracao",
+              "webhooks/eventos"
+            ]
+          }
+        ]
+      }
     ]
   },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+  "api": {
+    "openapi": [
+      "openapi.json"
+    ],
+    "playground": {
+      "display": "simple"
+    },
+    "examples": {
+      "languages": [
+        "curl",
+        "javascript",
+        "python"
+      ],
+      "prefill": true
+    }
+  },
+  "seo": {
+    "metatags": {
+      "description": "Documentação oficial da API Zanpay para cobranças Pix, saques e webhooks."
     }
   }
 }

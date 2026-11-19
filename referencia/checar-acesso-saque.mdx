@@ -1,0 +1,7 @@
+---
+title: "Checar acesso a saques"
+description: "Verifique se a chave e o IP de origem estão autorizados para saque."
+openapi: "openapi.json POST /api/v1/withdrawals/check"
+---
+
+Chame esta rota a partir do mesmo servidor que vai [solicitar o saque](/referencia/solicitar-saque). A resposta indica se a conta, o escopo e o IP permitem acessar o canal de saque.

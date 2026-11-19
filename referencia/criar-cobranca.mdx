@@ -1,0 +1,7 @@
+---
+title: "Criar cobrança"
+description: "Gere um Pix Copia e Cola para receber um pagamento."
+openapi: "openapi.json POST /api/v1/transactions"
+---
+
+Envie o valor em centavos e o nome do pagador. Para acompanhar o pagamento, guarde o `id` retornado e configure o evento [`charge.paid`](/webhooks/eventos).

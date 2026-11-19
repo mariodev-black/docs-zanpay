@@ -1,0 +1,13 @@
+---
+title: "Idempotência e reenvios"
+description: "Repita uma solicitação após uma falha de conexão sem criar outra operação."
+---
+
+Use `Idempotency-Key` ao [criar uma cobrança](/referencia/criar-cobranca) ou [solicitar um saque](/referencia/solicitar-saque). Envie de 1 a 100 caracteres com letras ASCII, números ou os símbolos `.`, `_`, `:` e `-`.
+
+- Gere um valor único por intenção de pagamento ou saque.
+- Grave o valor e o corpo da solicitação antes de chamar a API.
+- Após um timeout, reenvie o mesmo corpo com a mesma chave. A resposta identifica a operação original e pode refletir seu status atual.
+- Uma chave reutilizada com dados diferentes retorna HTTP `409`.
+
+Em uma cobrança ainda em processamento, `copyPaste` pode vir como `null`. Use o ID já recebido para [consultar a cobrança](/referencia/consultar-cobranca). Em saques, [consulte o ID existente](/referencia/consultar-saque) para acompanhar uma aprovação pendente ou um envio em conferência.

@@ -1,0 +1,22 @@
+.zanpay-guide-card {
+  --guide-background: #fff;
+  --guide-hover: #f0f5e6;
+  --guide-focus: #536d1c;
+  background-color: var(--guide-background);
+}
+
+html.dark .zanpay-guide-card {
+  --guide-background: #222223;
+  --guide-hover: #29292b;
+  --guide-focus: #d6f88a;
+}
+
+.zanpay-guide-card:hover,
+.zanpay-guide-card:focus-visible {
+  background-color: var(--guide-hover);
+}
+
+.zanpay-guide-card:focus-visible {
+  outline: 2px solid var(--guide-focus);
+  outline-offset: 3px;
+}

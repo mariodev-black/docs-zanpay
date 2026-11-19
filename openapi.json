@@ -1,0 +1,710 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "API Zanpay",
+    "version": "1.0.0",
+    "description": "Integração de cobranças, saques Pix e consulta de operações da conta."
+  },
+  "servers": [
+    {
+      "url": "https://api.zanpaybr.com",
+      "description": "Produção"
+    }
+  ],
+  "security": [
+    {
+      "ZanpayApiKey": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Cobranças"
+    },
+    {
+      "name": "Saques"
+    }
+  ],
+  "paths": {
+    "/api/v1/transactions": {
+      "post": {
+        "operationId": "criarCobranca",
+        "summary": "Criar cobrança",
+        "tags": [
+          "Cobranças"
+        ],
+        "description": "Exige o escopo `charges` ou `charges_and_withdrawals`. A tarifa é calculada na criação. O crédito líquido ocorre após a confirmação do pagamento.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCharge"
+              },
+              "example": {
+                "amountCents": 5000,
+                "payerName": "Cliente Exemplo",
+                "description": "Pedido 123"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Cobrança criada ou recuperada por idempotência.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Charge"
+                },
+                "example": {
+                  "id": "381246",
+                  "reference": "ZP-referencia-ilustrativa",
+                  "status": "pending",
+                  "amountCents": 5000,
+                  "feeCents": 150,
+                  "netCents": 4850,
+                  "copyPaste": "000201010212...CODIGO-ILUSTRATIVO"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidInput"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/transactions/{id}": {
+      "get": {
+        "operationId": "consultarCobranca",
+        "summary": "Consultar cobrança",
+        "tags": [
+          "Cobranças"
+        ],
+        "description": "Exige o escopo `charges` ou `charges_and_withdrawals`. Retorna cobranças da conta vinculada à chave.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/OperationId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cobrança localizada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Charge"
+                },
+                "example": {
+                  "id": "381246",
+                  "reference": "ZP-referencia-ilustrativa",
+                  "status": "paid",
+                  "amountCents": 5000,
+                  "feeCents": 150,
+                  "netCents": 4850,
+                  "copyPaste": "000201010212...CODIGO-ILUSTRATIVO"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/v1/withdrawals/check": {
+      "post": {
+        "operationId": "checarAcessoSaque",
+        "summary": "Checar acesso a saques",
+        "tags": [
+          "Saques"
+        ],
+        "description": "Confere a conta, o escopo de saque, a habilitação do canal e o IP de origem. Envie a requisição com os cabeçalhos, com corpo vazio.",
+        "responses": {
+          "200": {
+            "description": "Acesso autorizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WithdrawalAccess"
+                },
+                "example": {
+                  "allowed": true
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/v1/withdrawals": {
+      "post": {
+        "operationId": "solicitarSaque",
+        "summary": "Solicitar saque",
+        "tags": [
+          "Saques"
+        ],
+        "description": "Exige o escopo `withdrawals` ou `charges_and_withdrawals`, canal de saque via API habilitado e IP autorizado. A nova solicitação reserva o valor e a tarifa e aguarda aprovação.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWithdrawal"
+              },
+              "example": {
+                "amountCents": 5000,
+                "keyType": "email",
+                "key": "pix@example.com"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Saque solicitado ou recuperado por idempotência.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Withdrawal"
+                },
+                "example": {
+                  "id": "694217",
+                  "status": "pending",
+                  "occurredAt": "2026-11-19T12:20:00.000Z",
+                  "amountCents": 5000,
+                  "feeCents": 250,
+                  "totalCents": 5250,
+                  "keyType": "email"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidInput"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/withdrawals/{id}": {
+      "get": {
+        "operationId": "consultarSaque",
+        "summary": "Consultar saque",
+        "tags": [
+          "Saques"
+        ],
+        "description": "Exige o escopo `withdrawals` ou `charges_and_withdrawals`, canal habilitado e IP autorizado. Retorna saques da API da conta vinculada à chave.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/OperationId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Saque localizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Withdrawal"
+                },
+                "example": {
+                  "id": "694217",
+                  "status": "completed",
+                  "occurredAt": "2026-11-19T12:20:00.000Z",
+                  "amountCents": 5000,
+                  "feeCents": 250,
+                  "totalCents": 5250,
+                  "keyType": "email",
+                  "providerStatus": "completed",
+                  "endToEndId": "E12345678202611191240ABCDEF123456"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ZanpayApiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "Chave gerada no painel em **API e webhooks**."
+      }
+    },
+    "parameters": {
+      "IdempotencyKey": {
+        "name": "Idempotency-Key",
+        "in": "header",
+        "description": "Identificador único por operação. Reutilize o valor em reenvios com os mesmos dados.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "example": "pedido-123"
+      },
+      "OperationId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "ID de seis dígitos retornado na criação da operação. Use o ID da conta que emitiu a solicitação.",
+        "schema": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{5}$",
+          "description": "Identificador Zanpay com seis dígitos."
+        },
+        "example": "381246"
+      }
+    },
+    "schemas": {
+      "CreateCharge": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "amountCents",
+          "payerName"
+        ],
+        "properties": {
+          "amountCents": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "description": "Valor em centavos inteiros. Os limites são definidos na conta.",
+            "maximum": 999999999999,
+            "example": 5000
+          },
+          "payerName": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 200,
+            "description": "Nome do pagador.",
+            "example": "Cliente Exemplo"
+          },
+          "payerDocument": {
+            "type": "string",
+            "minLength": 11,
+            "maxLength": 20,
+            "description": "CPF ou CNPJ válido, com ou sem máscara. A Zanpay valida os dígitos verificadores.",
+            "example": "52998224725"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300,
+            "description": "Descrição associada à cobrança.",
+            "example": "Pedido 123"
+          }
+        }
+      },
+      "Charge": {
+        "type": "object",
+        "required": [
+          "id",
+          "reference",
+          "status",
+          "amountCents",
+          "feeCents",
+          "netCents",
+          "copyPaste"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{5}$",
+            "description": "Identificador Zanpay com seis dígitos."
+          },
+          "reference": {
+            "type": "string",
+            "description": "Referência da operação gerada pela Zanpay."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "paid",
+              "refunded",
+              "expired",
+              "failed"
+            ]
+          },
+          "amountCents": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "description": "Valor cobrado do pagador."
+          },
+          "feeCents": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "description": "Tarifa fixa e percentual da conta no momento da criação."
+          },
+          "netCents": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "description": "Valor cobrado menos a tarifa."
+          },
+          "copyPaste": {
+            "type": "string",
+            "nullable": true,
+            "description": "Código Pix Copia e Cola. Pode vir nulo enquanto a geração está pendente."
+          }
+        }
+      },
+      "CreateWithdrawal": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "amountCents",
+          "keyType",
+          "key"
+        ],
+        "properties": {
+          "amountCents": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "description": "Valor que o destinatário recebe. A Zanpay reserva esse valor mais a tarifa.",
+            "maximum": 999999999999,
+            "example": 5000
+          },
+          "keyType": {
+            "type": "string",
+            "enum": [
+              "cpf",
+              "cnpj",
+              "email",
+              "phone",
+              "random"
+            ],
+            "description": "Tipo da chave Pix de destino."
+          },
+          "key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 254,
+            "description": "Chave no formato de `keyType`. E-mail tem até 77 caracteres. Para CNPJ, use o formato numérico.",
+            "example": "pix@example.com"
+          }
+        }
+      },
+      "WithdrawalAccess": {
+        "type": "object",
+        "required": [
+          "allowed"
+        ],
+        "properties": {
+          "allowed": {
+            "type": "boolean",
+            "enum": [
+              true
+            ],
+            "description": "A conta pode solicitar saques a partir deste IP."
+          }
+        }
+      },
+      "Withdrawal": {
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "occurredAt",
+          "amountCents",
+          "feeCents",
+          "totalCents",
+          "keyType"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{5}$",
+            "description": "Identificador Zanpay com seis dígitos."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "reviewing",
+              "completed",
+              "failed"
+            ]
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data e hora da solicitação."
+          },
+          "amountCents": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "description": "Valor destinado ao recebedor."
+          },
+          "feeCents": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "description": "Tarifa de saque da conta."
+          },
+          "totalCents": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "description": "Soma do valor destinado ao recebedor e da tarifa."
+          },
+          "keyType": {
+            "type": "string",
+            "enum": [
+              "cpf",
+              "cnpj",
+              "email",
+              "phone",
+              "random"
+            ],
+            "description": "Tipo da chave Pix de destino."
+          },
+          "providerStatus": {
+            "type": "string",
+            "enum": [
+              "sending",
+              "awaiting",
+              "uncertain",
+              "completed",
+              "failed"
+            ],
+            "description": "Acompanhamento do envio à adquirente, quando disponível."
+          },
+          "endToEndId": {
+            "type": "string",
+            "description": "Identificador Pix registrado após a confirmação, quando disponível."
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Mensagem com detalhes sobre a falha."
+          },
+          "code": {
+            "type": "string",
+            "description": "Código da aplicação, quando disponível."
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Campos rejeitados na validação."
+          },
+          "statusCode": {
+            "type": "integer"
+          },
+          "error": {
+            "type": "string"
+          },
+          "retryAfter": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Tempo de espera em segundos, quando o limite de requisições é atingido."
+          }
+        }
+      }
+    },
+    "responses": {
+      "InvalidInput": {
+        "description": "Dados inválidos, saldo insuficiente, limites ou tarifa incompatível.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "code": "INVALID_INPUT",
+              "message": "Confira os campos enviados.",
+              "fields": [
+                "amountCents"
+              ]
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Chave ausente, inválida ou revogada.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "code": "INVALID_API_KEY",
+              "message": "Chave de API inválida."
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Escopo insuficiente, conta indisponível, canal de saque desabilitado ou IP fora da lista.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "code": "INVALID_API_SCOPE",
+              "message": "A chave não tem permissão para esta operação."
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "ID inválido ou operação indisponível na conta da chave.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "message": "Registro não encontrado.",
+              "error": "Not Found",
+              "statusCode": 404
+            }
+          }
+        }
+      },
+      "Conflict": {
+        "description": "Idempotency-Key usada com outros dados.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "message": "Esta Idempotency-Key já foi usada com outros dados.",
+              "error": "Conflict",
+              "statusCode": 409
+            }
+          }
+        }
+      },
+      "RateLimited": {
+        "description": "Limite de requisições atingido.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "code": "TOO_MANY_ATTEMPTS",
+              "message": "Muitas tentativas. Aguarde antes de tentar novamente.",
+              "retryAfter": 30
+            }
+          }
+        },
+        "headers": {
+          "Retry-After": {
+            "description": "Segundos até uma nova tentativa.",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "Unavailable": {
+        "description": "Processamento Pix temporariamente indisponível.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "code": "ALLO_UNAVAILABLE",
+              "message": "Não foi possível confirmar a operação com a Allo no momento."
+            }
+          }
+        }
+      }
+    }
+  }
+}
