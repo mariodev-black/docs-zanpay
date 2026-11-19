@@ -17,15 +17,17 @@ Erros de validação de campos retornam HTTP `400`, com `code`, `message` e `fie
 
 Outros erros podem vir com `statusCode`, `message` e `error`.
 
+As falhas de autorização da chave podem trazer um `requestId`. Informe esse identificador ao suporte para localizar a requisição.
+
 | HTTP | Quando ocorre | Ação |
 | --- | --- | --- |
 | `400` | Campos inválidos, limites da conta, saldo insuficiente ou limite diário de saques | Corrija os dados e confira os limites e a tarifa da conta |
-| `401` | Chave de API ausente, inválida ou revogada | Confira o cabeçalho `X-API-Key` |
+| `401` | Chave de API ausente, inválida ou revogada | Confira o cabeçalho `X-API-Key` e use uma chave criada no mesmo ambiente da requisição |
 | `403` | Escopo insuficiente, conta indisponível, saque desabilitado ou IP de origem sem autorização | Confira as permissões da chave, a conta e o IP |
 | `404` | ID inválido ou registro indisponível na conta da chave | Use o ID original e a credencial daquela conta |
 | `409` | `Idempotency-Key` já usada com dados diferentes | Confira o pedido original e a chave associada |
 | `429` | Limite de requisições atingido | Aguarde os segundos indicados por `Retry-After` |
-| `503` | O processamento Pix está indisponível ou a confirmação falhou temporariamente | Para criações, repita a chamada com a mesma `Idempotency-Key` |
+| `503` | A validação da chave ou o processamento Pix está temporariamente indisponível | Para criações, repita a chamada com a mesma `Idempotency-Key` |
 
 ## Códigos comuns
 
@@ -40,6 +42,7 @@ Outros erros podem vir com `statusCode`, `message` e `error`.
 | `INSUFFICIENT_BALANCE` | Saldo insuficiente para o valor e a tarifa |
 | `DAILY_WITHDRAWAL_LIMIT` | Limite diário de saques atingido |
 | `TOO_MANY_ATTEMPTS` | Limite de acesso por IP atingido |
+| `API_AUTH_UNAVAILABLE` | Falha temporária ao validar a chave de API |
 | `PIX_PROVIDER_UNAVAILABLE` | Processamento Pix indisponível ou confirmação pendente |
 
 O limite de acesso às rotas Pix é de 120 requisições por IP em uma janela de 60 segundos. Prefira [webhooks](/webhooks/configuracao) para receber atualizações assíncronas.

@@ -578,6 +578,11 @@
             "type": "string",
             "description": "Código da aplicação, quando disponível."
           },
+          "requestId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Identificador do erro de autorização da chave, quando disponível."
+          },
           "fields": {
             "type": "array",
             "items": {
@@ -700,7 +705,7 @@
         }
       },
       "Unavailable": {
-        "description": "Processamento Pix temporariamente indisponível.",
+        "description": "Processamento Pix ou validação de chave temporariamente indisponível.",
         "content": {
           "application/json": {
             "schema": {
